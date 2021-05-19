@@ -6,11 +6,11 @@
 async function getTemperature( context, sensor ) {
 	try {
 		const sensorMap = context.config.sensor;
-		if ( sensorMap.length == 1 ) {
+		// if ( sensorMap.length == 1 ) {
 			const sensorDevice = sensorMap[0].deviceConfig;
 			const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'temperatureMeasurement');
 			return sensorState[0].temperature.value;
-		}
+		// }
 	} catch (err) {
 		console.log("Error", err);
 	}	
