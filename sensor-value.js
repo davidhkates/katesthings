@@ -1,13 +1,12 @@
-			const sensorTemp =  context.config.tempSensor;
-			console.log('Temperature sensor: ', sensorTemp);
-			const indoorTemp = await context.api.devices.getCapabilityStatus(
-				sensorTemp[0].deviceConfig.deviceId, sensorTemp[0].deviceConfig.componentId, 'temperatureMeasurement');
-			console.log('Temperature value: ', indoorTemp);
-			const stateRequests = sensorTemp.map(it => context.api.devices.getCapabilityStatus(
-				it.deviceConfig.deviceId,
-				it.deviceConfig.componentId,
-				'temperatureMeasurement'
-			));
-			const states = await Promise.all(stateRequests);
+// get the temperature value of specified sensor
+async function getTemperature( sensor ) {
+	try {
+		const sensorState = await context.api.devices.getCapabilityStatus( sensor.deviceConfig.deviceId, sensor.deviceConfig.componentId, 'temperatureMeasurement');
+		return sensorState[0].temperature.value;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+};	
 
-			const currentTemp = states[0].temperature.value;
+// Export function
+exports.getTemperature = getTemperature;
