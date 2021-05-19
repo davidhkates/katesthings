@@ -1,6 +1,6 @@
 # smartstate
 
-Utilities using DynamoDB to storing and retrieving stateful information
+Utilities using DynamoDB to store and retrieve stateful information
 for SmartThings automation lambda functions
 
 # Instructions
