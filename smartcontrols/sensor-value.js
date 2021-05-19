@@ -3,7 +3,7 @@
 */
 
 // get the temperature value of specified sensor
-async function getTemperature( sensor ) {
+async function getTemperature( context, sensor ) {
 	try {
 		const sensorState = await context.api.devices.getCapabilityStatus( sensor.deviceConfig.deviceId, sensor.deviceConfig.componentId, 'temperatureMeasurement');
 		return sensorState[0].temperature.value;
@@ -13,7 +13,7 @@ async function getTemperature( sensor ) {
 };	
 
 // get the contact state of specified sensor
-async function getContact( sensor ) {
+async function getContact( context, sensor ) {
 	try {
 		const sensorState = await context.api.devices.getCapabilityStatus( sensor.deviceConfig.deviceId, sensor.deviceConfig.componentId, 'contactState');
 		return sensorState[0].contact.value;
