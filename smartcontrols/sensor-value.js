@@ -14,7 +14,7 @@ async function getTemperature( context, sensor ) {
 };	
 
 // get the contact state of specified contact sensor
-async function getContact( context, sensor ) {
+async function getContactState( context, sensor ) {
 	try {
 		const sensorDevice = sensor.deviceConfig;
 		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'contactSensor');
@@ -25,6 +25,19 @@ async function getContact( context, sensor ) {
 };	
 
 
+// get the state of specified switch
+async function getSwitchState( context, sensor ) {
+	try {
+		const sensorDevice = sensor.deviceConfig;
+		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'switch');
+		return sensorState.switch.value;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+};
+
+
 // Export function
-exports.getTemperature = getTemperature;
-exports.getContact     = getContact;
+exports.getTemperature  = getTemperature;
+exports.getContactState = getContactState;
+exports.getSwitchState  = getSwitchState;
