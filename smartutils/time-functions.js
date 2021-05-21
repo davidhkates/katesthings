@@ -22,3 +22,6 @@ function inTimeWindow( startDateTime, endDateTime ) {
 	}
 	return inTimeWindow;
 }
+
+/ Export date-time functions
+exports.inTimeWindow = inTimeWindow;
