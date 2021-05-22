@@ -13,6 +13,17 @@ async function getTemperature( context, sensor ) {
 	}	
 };	
 
+// get the relative humidity value of specified sensor
+async function getHumidity( context, sensor ) {
+	try {
+		const sensorDevice = sensor.deviceConfig;
+		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'relativeHumidityMeasurement');
+		return sensorState.humidity.value;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+};	
+
 // get the contact state of specified contact sensor
 async function getContactState( context, sensor ) {
 	try {
@@ -39,5 +50,6 @@ async function getSwitchState( context, sensor ) {
 
 // Export function
 exports.getTemperature  = getTemperature;
+exports.getTemperature  = getHumidity;
 exports.getContactState = getContactState;
 exports.getSwitchState  = getSwitchState;
