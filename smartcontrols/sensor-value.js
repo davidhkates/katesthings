@@ -50,6 +50,6 @@ async function getSwitchState( context, sensor ) {
 
 // Export function
 exports.getTemperature  = getTemperature;
-exports.getTemperature  = getHumidity;
+exports.getHumidity     = getHumidity;
 exports.getContactState = getContactState;
 exports.getSwitchState  = getSwitchState;
