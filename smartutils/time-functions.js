@@ -25,5 +25,24 @@ function inTimeWindow( startDateTime, endDateTime ) {
 	return inTimeWindow;
 }
 
+
+function bDayOfWeek( strDayOfWeek ) {
+	const today = new Date();
+	const nDayOfWeek = today.getDay();
+	var bDayOfWeek = false;
+	switch (strDayOfWeek) {
+		case 'everyday':
+			bDayOfWeek = true;
+			break;
+		case 'weekdays':
+			bDayOfWeek = ( nDayOfWeek >= 1 && nDayOfWeek <= 5 );
+			break;
+		case 'weekend':
+			bDayOfWeek = ( nDayOfWeek==0 || nDayOfWeek==6 );
+	}
+	return bDayOfWeek;
+}
+
 // Export date/time functions
 exports.inTimeWindow = inTimeWindow;
+exports.bDayOfWeek = bDayOfWeek;
