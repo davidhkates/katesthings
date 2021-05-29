@@ -26,7 +26,7 @@ function inTimeWindow( startDateTime, endDateTime ) {
 }
 
 
-function bDayOfWeek( strDayOfWeek ) {
+function isDayOfWeek( strDayOfWeek ) {
 	const today = new Date();
 	const nDayOfWeek = today.getDay();
 	var bDayOfWeek = false;
@@ -45,4 +45,4 @@ function bDayOfWeek( strDayOfWeek ) {
 
 // Export date/time functions
 exports.inTimeWindow = inTimeWindow;
-exports.bDayOfWeek = bDayOfWeek;
+exports.isDayOfWeek = isDayOfWeek;
