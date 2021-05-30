@@ -1,4 +1,4 @@
-# controls
+# smartcontrols
 
 Convenience functions to get state/value of SmartThings automation controls in lambda functions
 
