@@ -5,5 +5,5 @@ for SmartThings automation lambda functions
 
 # Instructions
 
-- To install: **npm i @katesthings/context-state --save**
-- To include: **const smartstate = require(@katesthings/context-state);**
+- To install: **npm i @katesthings/smartstate --save**
+- To include: **const smartstate = require(@katesthings/smartstate);**
