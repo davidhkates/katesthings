@@ -50,9 +50,31 @@ async function getState( appId, name ) {
 	} catch (err) {
 		console.log("Error", err);
 	}	
-};	
+};
+
+/*
+  Get the value for a given key from a given table
+  */
+async function getValue( table, key ) {
+	// Set the parameters
+	const params = {
+  		TableName: table,
+  		Key: {
+    			appId: { S: key }
+  		},
+  		ProjectionExpression: 'value'
+	};
+  	
+	// Return the requested state variable
+	try {
+		const data = await dbclient.send(new GetItemCommand(params));
+		return data.Item.value.S;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+};
 
 // Export state variable functions
-// module.exports { getState, putState };
-exports.getState = getState;
 exports.putState = putState;
+exports.getState = getState;
+exports.getValue = getValue;
