@@ -99,4 +99,4 @@ async function putValue( table, key, value ) {
 exports.getState = getState;
 exports.putState = putState;
 exports.getValue = getValue;
-exports.getValue = putValue;
+exports.putValue = putValue;
