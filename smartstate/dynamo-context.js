@@ -3,28 +3,6 @@ const { DynamoDBClient, GetItemCommand, PutItemCommand } = require("@aws-sdk/cli
 const dbclient = new DynamoDBClient({ region: 'us-west-2' });
 
 /*
-  Store the value of the specified state variable stored in DynamoDB as string
-  */
-async function putState( appId, name, value ) {
-	// Set the parameters
-	const params = {
-  		TableName: 'smartapp-context-store',
-  		Item: {
-    			appId: { S: appId },
-			name: { S: name },
-			stateValue: { S: value },
-  		},
-	};
-	
-	try {
-    		const data = await dbclient.send(new PutItemCommand(params));
-    		// console.log(data);
-  	} catch (err) {
-    		console.error(err);
-  	}
-};
-
-/*
   Get the value of the specified state variable stored in DynamoDB, returned as string
   */
 async function getState( appId, name ) {
@@ -53,14 +31,36 @@ async function getState( appId, name ) {
 };
 
 /*
+  Store the value of the specified state variable stored in DynamoDB as string
+  */
+async function putState( appId, name, value ) {
+	// Set the parameters
+	const params = {
+  		TableName: 'smartapp-context-store',
+  		Item: {
+    			appId: { S: appId },
+			name: { S: name },
+			stateValue: { S: value },
+  		},
+	};
+	
+	try {
+    		const data = await dbclient.send(new PutItemCommand(params));
+    		// console.log(data);
+  	} catch (err) {
+    		console.error(err);
+  	}
+};
+
+/*
   Get the value for a given key from a given table
   */
-async function getItem( table, key ) {
+async function getValue( table, key ) {
 	// Set the parameters
 	const params = {
   		TableName: table,
   		Key: {
-    			appId: { S: key }
+    			key: { S: key }
   		},
   		ProjectionExpression: 'keyValue'
 	};
@@ -74,7 +74,29 @@ async function getItem( table, key ) {
 	}	
 };
 
-// Export state variable functions
-exports.putState = putState;
+/*
+  Store an item in the specified table the value of the specified state variable stored in DynamoDB as string
+  */
+async function putValue( table, key, value ) {
+	// Set the parameters
+	const params = {
+  		TableName: table,
+  		Item: {
+    			key: { S: key },
+			keyValue: { S: value },
+  		},
+	};
+	
+	try {
+    		const data = await dbclient.send(new PutItemCommand(params));
+    		// console.log(data);
+  	} catch (err) {
+    		console.error(err);
+  	}
+};
+
+// Export functions
 exports.getState = getState;
+exports.putState = putState;
 exports.getValue = getValue;
+exports.getValue = putValue;
