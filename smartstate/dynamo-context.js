@@ -55,14 +55,14 @@ async function getState( appId, name ) {
 /*
   Get the value for a given key from a given table
   */
-async function getValue( table, key ) {
+async function getItem( table, key ) {
 	// Set the parameters
 	const params = {
   		TableName: table,
   		Key: {
     			appId: { S: key }
   		},
-  		ProjectionExpression: 'value'
+  		ProjectionExpression: 'keyValue'
 	};
   	
 	// Return the requested state variable
