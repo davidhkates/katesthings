@@ -92,8 +92,14 @@ async function putValue( table, key, value ) {
   	}
 };
 
+function nextState( appId, currentDateTime ) {
+	var nextState = null;
+	return nexState;
+};
+
 // Export functions
 exports.getState = getState;
 exports.putState = putState;
 exports.getValue = getValue;
 exports.putValue = putValue;
+exports.nextState = nextState;
