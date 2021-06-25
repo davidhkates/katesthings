@@ -94,6 +94,45 @@ async function putValue( table, key, value ) {
 
 function nextState( appId, currentDateTime ) {
 	var nextState = null;
+
+	
+	// const today = new Date();
+	// const nDayOfWeek = today.getDay();
+	const nDayOfWeek = currentDateTime.getDay();
+	
+	const params = {
+  		TableName: 'smartapp-state-machine',
+  		Key: {
+    			appId: { S: appId }
+  		}
+	};
+  	
+	// Return the requested state variable
+	try {
+		const data = await dbclient.send(new GetItemCommand(params));
+		return data.Item.stateValue.S;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+	
+	
+	
+	
+	var bDayOfWeek = false;
+	switch (strDayOfWeek) {
+		case 'everyday':
+			bDayOfWeek = true;
+			break;
+		case 'weekdays':
+			bDayOfWeek = ( nDayOfWeek >= 1 && nDayOfWeek <= 5 );
+			break;
+		case 'weekend':
+			bDayOfWeek = ( nDayOfWeek==0 || nDayOfWeek==6 );
+	}
+	return bDayOfWeek;	
+	
+	
+	
 	return nexState;
 };
 
