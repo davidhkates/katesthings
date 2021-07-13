@@ -98,6 +98,7 @@ async function putValue( table, key, value ) {
   	}
 };
 
+/*
 function nextState( appId, currentDateTime ) {
 	var nextState = null;
 
@@ -141,6 +142,7 @@ function nextState( appId, currentDateTime ) {
 	
 	return nexState;
 };
+*/
 
 // Export functions
 exports.getState = getState;
