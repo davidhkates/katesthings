@@ -149,4 +149,4 @@ exports.getState = getState;
 exports.putState = putState;
 exports.getValue = getValue;
 exports.putValue = putValue;
-exports.nextState = nextState;
+// exports.nextState = nextState;
