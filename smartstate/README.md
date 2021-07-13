@@ -9,3 +9,9 @@ for SmartThings automation lambda functions
 - **npm i @aws-sdk/client-dynamodb --save**
 - 
 - To include: **const smartstate = require(@katesthings/smartstate);**
+
+# Functions
+* getState( context, name )
+* putState( context, name, value )
+* getValue( table, name )
+* putValue( table, name, value )
