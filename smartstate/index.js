@@ -6,9 +6,9 @@ const contextTable = 'smartapp-context-store';
 /*
   Get the value of the specified state variable stored in DynamoDB, returned as string
   */
-async function getState( appId, name ) {
-	// console.log("Calling DynamoDB application context store to get state variable value");
-	const appId = context.
+async function getState( context, name ) {
+	// use appId as unique key combined with name for state variable 
+	const appId = context.event.appId;
 	
 	// Set the parameters
 	const params = {
@@ -22,6 +22,7 @@ async function getState( appId, name ) {
   	
 	// Return the requested state variable
 	try {
+		// console.log("Calling DynamoDB application context store to get state variable value");
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.stateValue.S;
 	} catch (err) {
@@ -32,7 +33,10 @@ async function getState( appId, name ) {
 /*
   Store the value of the specified state variable stored in DynamoDB as string
   */
-async function putState( appId, name, value ) {
+async function putState( context, name, value ) {
+	// use appId as unique key combined with name for state variable 
+	const appId = context.event.appId;
+
 	// Set the parameters
 	const params = {
   		TableName: 'smartapp-context-store',
