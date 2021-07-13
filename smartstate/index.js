@@ -8,7 +8,8 @@ const contextTable = 'smartapp-context-store';
   */
 async function getState( appId, name ) {
 	// console.log("Calling DynamoDB application context store to get state variable value");
-
+	const appId = context.
+	
 	// Set the parameters
 	const params = {
   		TableName: 'smartapp-context-store',
