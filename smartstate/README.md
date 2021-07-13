@@ -7,7 +7,7 @@ for SmartThings automation lambda functions
 
 - To install: **npm i @katesthings/smartstate --save**
 - **npm i @aws-sdk/client-dynamodb --save**
-- 
+&cr;&lf; 
 - To include: **const smartstate = require(@katesthings/smartstate);**
 
 # Functions
