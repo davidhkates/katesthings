@@ -6,9 +6,7 @@ const dbclient = new DynamoDBClient({ region: 'us-west-2' });
 const contextTable = 'smartapp-context-store';
 const logTable = 'smartapp-circular-log';
 
-/*
-  Get the value of the specified state variable stored in DynamoDB, returned as string
-  */
+// Get the value of the specified state variable stored in DynamoDB, returned as string
 async function getState( context, name ) {
 	// use appId as unique key combined with name for state variable 
 	const appId = context.event.appId;
@@ -33,9 +31,7 @@ async function getState( context, name ) {
 	}	
 };
 
-/*
-  Store the value of the specified state variable stored in DynamoDB as string
-  */
+// Store the value of the specified state variable stored in DynamoDB as string
 async function putState( context, name, value ) {
 	// use appId as unique key combined with name for state variable 
 	const appId = context.event.appId;
@@ -58,9 +54,7 @@ async function putState( context, name, value ) {
   	}
 };
 
-/*
-  Get the value for a given key from a given table
-  */
+// Get the value for a given key from a given table
 async function getValue( table, key ) {
 	// Set the parameters
 	const params = {
@@ -80,9 +74,7 @@ async function getValue( table, key ) {
 	}	
 };
 
-/*
-  Store an item in the specified table the value of the specified state variable stored in DynamoDB as string
-  */
+//  Store an item in the specified table the value of the specified state variable stored in DynamoDB as string
 async function putValue( table, key, value ) {
 	// Set the parameters
 	const params = {
@@ -101,7 +93,7 @@ async function putValue( table, key, value ) {
   	}
 };
 
-
+// get room control app settings
 async function getAppSettings(room) {
 	var dynamoDB = new aws.DynamoDB.DocumentClient();
 	const params = {
@@ -111,7 +103,6 @@ async function getAppSettings(room) {
     			':room': room
 		}		
 	};
-	console.log('Params: ', params);
 
 	try {
 		const data = await dynamoDB.query(params).promise();
@@ -124,7 +115,7 @@ async function getAppSettings(room) {
 
 
 // write log entry to circular log
-async function writeLogEntry(logRecord, target) {
+async function writeLogEntry(logRecord, category, target) {
 	if (target=='console') {
 		console.log(logRecord);
 	} else {
@@ -146,14 +137,12 @@ async function writeLogEntry(logRecord, target) {
 			dynamoDB.put({
 				Item: {
 					logItem: logOffset,
-					logCategory: logCategory,
+					logCategory: category,
 					logRecord: logRecord,
 					timestamp: new Date().toLocaleString("en-US", {timeZone: "America/Denver"}),
 				},
 				TableName: logTable,
 			}).promise();
-			// .then( data => console.log(data.Attributes))
-			// .catch(console.error);		
 
 			// update metadata
 			if (logOffset++ == maxRecords) { logOffset = 1 };
@@ -163,14 +152,13 @@ async function writeLogEntry(logRecord, target) {
 					logOffset: logOffset,
 				},
 				TableName: logTable,
-			}).promise()
-			.then( data => console.log(data.Attributes))
-			.catch(console.error);		
+			}).promise();
+			// .then( data => console.log(data.Attributes))
+			// .catch(console.error);		
 		})		
 		.catch(console.error);
 	}	
 };	
-
 
 
 // Export functions
@@ -178,3 +166,5 @@ exports.getState = getState;
 exports.putState = putState;
 exports.getValue = getValue;
 exports.putValue = putValue;
+exports.getAppSettings = getAppSettings;
+exports.writeLogEntry = writeLogEntry;
