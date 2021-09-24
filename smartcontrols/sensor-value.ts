@@ -54,7 +54,7 @@ async function getMotionState( context, sensor ) {
 	} catch (err) {
 		console.log("Error", err);
 	}
-];
+};
 
 // get the contact state of specified contact sensor
 async function getContactState( context, sensor ) {
