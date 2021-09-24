@@ -4,5 +4,5 @@
 		"skipLibCheck": true,
 		"target": "es6"
 	},
-	"files": ["sensor-value.ts"]
+	"files": ["controls.ts"]
 }
