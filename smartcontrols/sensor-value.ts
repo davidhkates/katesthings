@@ -31,11 +31,11 @@ async function getMotionState( context, sensor ) {
 	
 	try {
 		// See if there are any other motion sensors defined
-		const motionSensors = context.config.sensor;
+		var motionSensors = context.config.sensor;
 
 		if (motionSensors) {
 			// Get the current states of the other motion sensors
-			const stateRequests = otherSensors.map(it => context.api.devices.getCapabilityStatus(
+			const stateRequests = motionSensors.map(it => context.api.devices.getCapabilityStatus(
 				it.deviceConfig.deviceId,
 				it.deviceConfig.componentId,
 				'motionSensor'
