@@ -24,6 +24,37 @@ async function getHumidity( context, sensor ) {
 	}	
 };	
 
+// get the status of the specified motion sensor(s)
+async function getMotion( context, sensor ) {
+	
+	const returnValue = 'inactive';  //default to inactive
+	
+	try {
+		// See if there are any other motion sensors defined
+		const motionSensors =  context.config.sensor;
+
+		if (motionSensors) {
+			// Get the current states of the other motion sensors
+			const stateRequests = otherSensors.map(it => context.api.devices.getCapabilityStatus(
+				it.deviceConfig.deviceId,
+				it.deviceConfig.componentId,
+				'motionSensor'
+			));
+
+		// Set return value based on value of motion sensor(s)		
+		const states: any = await Promise.all(stateRequests);
+		if (states.find(it => it.motion.value === 'active')) {
+			returnValue = 'active';
+			if (states.find(it => it.motion.value === 'inactive')) {
+				returnValue = 'mixed';
+			}
+		}
+		return returnValue;
+	} catch (err) {
+		console.log("Error", err);
+	}
+];
+
 // get the contact state of specified contact sensor
 async function getContactState( context, sensor ) {
 	try {
