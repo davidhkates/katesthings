@@ -24,14 +24,14 @@ async function getHumidity( context, sensor ) {
 	}	
 };	
 
-// get the status of the specified motion sensor(s)
-async function getMotion( context, sensor ) {
+// get the state of the specified motion sensor(s)
+async function getMotionState( context, sensor ) {
 	
 	const returnValue = 'inactive';  //default to inactive
 	
 	try {
 		// See if there are any other motion sensors defined
-		const motionSensors =  context.config.sensor;
+		const motionSensors = context.config.sensor;
 
 		if (motionSensors) {
 			// Get the current states of the other motion sensors
@@ -39,14 +39,15 @@ async function getMotion( context, sensor ) {
 				it.deviceConfig.deviceId,
 				it.deviceConfig.componentId,
 				'motionSensor'
-			));
+			));			
 
-		// Set return value based on value of motion sensor(s)		
-		const states: any = await Promise.all(stateRequests);
-		if (states.find(it => it.motion.value === 'active')) {
-			returnValue = 'active';
-			if (states.find(it => it.motion.value === 'inactive')) {
-				returnValue = 'mixed';
+			// Set return value based on value of motion sensor(s)		
+			const states: any = await Promise.all(stateRequests);
+			if (states.find(it => it.motion.value === 'active')) {
+				returnValue = 'active';
+				if (states.find(it => it.motion.value === 'inactive')) {
+					returnValue = 'mixed';
+				}
 			}
 		}
 		return returnValue;
@@ -82,5 +83,6 @@ async function getSwitchState( context, sensor ) {
 // Export function
 exports.getTemperature  = getTemperature;
 exports.getHumidity     = getHumidity;
+exports.getMotionState  = getMotionState;
 exports.getContactState = getContactState;
 exports.getSwitchState  = getSwitchState;
