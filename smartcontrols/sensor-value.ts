@@ -27,11 +27,11 @@ async function getHumidity( context, sensor ) {
 // get the state of the specified motion sensor(s)
 async function getMotionState( context, sensor ) {
 	
-	const returnValue = 'inactive';  //default to inactive
+	var returnValue = 'inactive';  //default to inactive
 	
 	try {
 		// See if there are any other motion sensors defined
-		var motionSensors = context.config.sensor;
+		const motionSensors = context.config.sensor;
 
 		if (motionSensors) {
 			// Get the current states of the other motion sensors
