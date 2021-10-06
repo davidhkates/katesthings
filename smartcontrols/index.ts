@@ -30,7 +30,7 @@ async function getMotionState( context, sensor ) {
 	var returnValue = 'inactive';  //default to inactive
 	
 	try {
-		// See if there are any other motion sensors defined
+		// Build request to get state of all motion sensors
 		const motionSensors = context.config.sensor;
 
 		if (motionSensors) {
@@ -58,7 +58,36 @@ async function getMotionState( context, sensor ) {
 
 // get the contact state of specified contact sensor
 async function getContactState( context, sensor ) {
+
+	var returnValue = 'open';  //default to allOpen
+	
 	try {
+		// Build request to get state of all motion sensors
+		const contactSensors = context.config.sensor;
+
+		if (contactSensors) {
+			// Get the current states of the other contact sensors
+			const stateRequests = contactSensors.map(it => context.api.devices.getCapabilityStatus(
+				it.deviceConfig.deviceId,
+				it.deviceConfig.componentId,
+				'contactSensor'
+			));
+
+			// Set return value based on value of contact sensor(s)		
+			const states: any = await Promise.all(stateRequests);
+			if (states.find(it => it.motion.value === 'closed')) {
+				returnValue = 'closed';
+				if (states.find(it => it.motion.value === 'open')) {
+					returnValue = 'mixed';
+				}
+			}
+		}
+
+
+
+
+
+
 		const sensorDevice = sensor.deviceConfig;
 		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'contactSensor');
 		return sensorState.contact.value;
