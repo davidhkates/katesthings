@@ -75,9 +75,9 @@ async function getContactState( context, sensor ) {
 
 			// Set return value based on value of contact sensor(s)		
 			const states: any = await Promise.all(stateRequests);
-			if (states.find(it => it.motion.value === 'closed')) {
+			if (states.find(it => it.contact.value === 'closed')) {
 				returnValue = 'closed';
-				if (states.find(it => it.motion.value === 'open')) {
+				if (states.find(it => it.contact.value === 'open')) {
 					returnValue = 'mixed';
 				}
 			}
