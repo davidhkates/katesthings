@@ -2,6 +2,7 @@
 const { DynamoDBClient, GetItemCommand, PutItemCommand } = require("@aws-sdk/client-dynamodb");
 const dbclient = new DynamoDBClient({ region: 'us-west-2' });
 const contextTable = 'smartapp-context-store';
+const homeSettings = 'smartapp-home-settings';
 
 /*
   Get the value of the specified state variable stored in DynamoDB, returned as string
@@ -144,9 +145,57 @@ function nextState( appId, currentDateTime ) {
 };
 */
 
+async function getHomeStatus( context, name ) {
+	// use appId as unique key combined with name for state variable 
+	const appId = context.event.appId;
+	
+	// Set the parameters
+	const params = {
+  		TableName: 'smartapp-home-settings',
+  		Key: {
+    			appId: { S: appId },
+			name: { S: name },
+  		},
+  		ProjectionExpression: 'stateValue',
+	};
+  	
+	// Return the requested state variable
+	try {
+		// console.log("Calling DynamoDB application context store to get state variable value");
+		const data = await dbclient.send(new GetItemCommand(params));
+		return data.Item.stateValue.S;
+	} catch (err) {
+		console.log("Error", err);
+	}	
+};
+
+async function updateHomeStatus( context, name, value ) {
+	// use appId as unique key combined with name for state variable 
+	const appId = context.event.appId;
+
+	// Set the parameters
+	const params = {
+  		TableName: 'smartapp-home-settings',
+  		Item: {
+    			appId: { S: appId },
+			name: { S: name },
+			stateValue: { S: value },
+  		},
+	};
+	
+	try {
+    		const data = await dbclient.send(new PutItemCommand(params));
+    		console.log('Data stored in DynamoDB: ',data);
+  	} catch (err) {
+    		console.error(err);
+  	}
+};
+
 // Export functions
 exports.getState = getState;
 exports.putState = putState;
 exports.getValue = getValue;
 exports.putValue = putValue;
 // exports.nextState = nextState;
+exports.getHomeStatus = getHomeStatus;
+exports.updateHomeStatus = updateHomeStatus;
