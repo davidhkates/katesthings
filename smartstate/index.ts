@@ -160,7 +160,7 @@ async function getHomeMode( homeName, modeType ) {
 	try {
 		// console.log("Calling DynamoDB application context store to get state variable value");
 		const data = await dbclient.send(new GetItemCommand(params));
-		return data.Item.mode.S;
+		return data.Item.modeValue.S;
 	} catch (err) {
 		console.log("Error", err);
 	}	
