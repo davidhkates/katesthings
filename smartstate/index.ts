@@ -185,6 +185,17 @@ async function putHomeMode( homeName, modeType, modeValue ) {
   	}
 };
 
+async function isOccupied( homeName ) {
+	// initialize return value to true
+	var bOccupied: boolean = true;
+	
+	if (homeName) {
+		const homeOccupiedMode = await getHomeMode( homeName, 'occupied' );
+		bOccupied = ( homeOccupiedMode==='awake');
+	}
+	return bOccupied;	
+};
+
 // Export functions
 exports.getState = getState;
 exports.putState = putState;
@@ -193,3 +204,4 @@ exports.putValue = putValue;
 // exports.nextState = nextState;
 exports.getHomeMode = getHomeMode;
 exports.putHomeMode = putHomeMode;
+exports.isOccupied = isOccupied;
