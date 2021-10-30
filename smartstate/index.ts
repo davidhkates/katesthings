@@ -145,15 +145,15 @@ function nextState( appId, currentDateTime ) {
 };
 */
 
-async function getHomeMode( name, type ) {
+async function getHomeMode( homeName, modeType ) {
 	// Set the parameters
 	const params = {
   		TableName: 'smartapp-home-settings',
   		Key: {
-			name: { S: name },
-			type: { S: type },
+			homeName: { S: homeName },
+			modeType: { S: modeType },
   		},
-  		ProjectionExpression: 'mode',
+  		ProjectionExpression: 'modeValue',
 	};
   	
 	// Return the requested mode type value
@@ -166,14 +166,14 @@ async function getHomeMode( name, type ) {
 	}	
 };
 
-async function putHomeMode( name, type, mode ) {
+async function putHomeMode( homeName, modeType, modeValue ) {
 	// Set the mode for the specified type
 	const params = {
   		TableName: 'smartapp-home-settings',
   		Item: {
-			name: { S: name },
-			type: { S: type },
-			mode: { S: mode },
+			homeName: { S: homeName },
+			modeType: { S: modeType },
+			modeValue: { S: modeValue },
   		},
 	};
 	
