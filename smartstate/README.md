@@ -1,7 +1,6 @@
 # smartstate
 
-Utilities using DynamoDB to store and retrieve stateful information
-for SmartThings automation lambda functions
+AWS Lambda utilities to store and retrieve data in DynamoDB for SmartThings SmartApps
 
 # Instructions
 
@@ -14,3 +13,5 @@ for SmartThings automation lambda functions
 * putState( context, name, value )
 * getValue( table, name )
 * putValue( table, name, value )
+* getHomeMode( home, type )
+* putHomeMode( home, type, mode )
