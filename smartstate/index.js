@@ -15,7 +15,7 @@ async function getState( context, name ) {
 	const params = {
   		TableName: 'smartapp-context-store',
   		Key: {
-    			appId: { S: appId },
+    		appId: { S: appId },
 			name: { S: name },
   		},
   		ProjectionExpression: 'stateValue',
@@ -42,7 +42,7 @@ async function putState( context, name, value ) {
 	const params = {
   		TableName: 'smartapp-context-store',
   		Item: {
-    			appId: { S: appId },
+    		appId: { S: appId },
 			name: { S: name },
 			stateValue: { S: value },
   		},
@@ -86,7 +86,7 @@ async function putValue( table, key, value ) {
 	const params = {
   		TableName: table,
   		Item: {
-    			key: { S: key },
+    		key: { S: key },
 			keyValue: { S: value },
   		},
 	};
@@ -145,7 +145,7 @@ function nextState( appId, currentDateTime ) {
 };
 */
 
-async function getHomeStatus( context, name ) {
+async function getHomeMode( context, name, type ) {
 	// use appId as unique key combined with name for state variable 
 	const appId = context.event.appId;
 	
@@ -153,23 +153,23 @@ async function getHomeStatus( context, name ) {
 	const params = {
   		TableName: 'smartapp-home-settings',
   		Key: {
-    			appId: { S: appId },
 			name: { S: name },
+			type: { S: type },
   		},
-  		ProjectionExpression: 'stateValue',
+  		ProjectionExpression: 'mode',
 	};
   	
 	// Return the requested state variable
 	try {
 		// console.log("Calling DynamoDB application context store to get state variable value");
 		const data = await dbclient.send(new GetItemCommand(params));
-		return data.Item.stateValue.S;
+		return data.Item.mode.S;
 	} catch (err) {
 		console.log("Error", err);
 	}	
 };
 
-async function updateHomeStatus( context, name, value ) {
+async function putHomeMode( context, name, type, mode ) {
 	// use appId as unique key combined with name for state variable 
 	const appId = context.event.appId;
 
@@ -177,9 +177,9 @@ async function updateHomeStatus( context, name, value ) {
 	const params = {
   		TableName: 'smartapp-home-settings',
   		Item: {
-    			appId: { S: appId },
 			name: { S: name },
-			stateValue: { S: value },
+			type: { S: type },
+			mode: { S: mode },
   		},
 	};
 	
@@ -197,5 +197,5 @@ exports.putState = putState;
 exports.getValue = getValue;
 exports.putValue = putValue;
 // exports.nextState = nextState;
-exports.getHomeStatus = getHomeStatus;
-exports.updateHomeStatus = updateHomeStatus;
+exports.getHomeMode = getHomeMode;
+exports.putHomeMode = putHomeMode;
