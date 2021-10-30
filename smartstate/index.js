@@ -145,10 +145,7 @@ function nextState( appId, currentDateTime ) {
 };
 */
 
-async function getHomeMode( context, name, type ) {
-	// use appId as unique key combined with name for state variable 
-	const appId = context.event.appId;
-	
+async function getHomeMode( name, type ) {
 	// Set the parameters
 	const params = {
   		TableName: 'smartapp-home-settings',
@@ -159,7 +156,7 @@ async function getHomeMode( context, name, type ) {
   		ProjectionExpression: 'mode',
 	};
   	
-	// Return the requested state variable
+	// Return the requested mode type value
 	try {
 		// console.log("Calling DynamoDB application context store to get state variable value");
 		const data = await dbclient.send(new GetItemCommand(params));
@@ -169,11 +166,8 @@ async function getHomeMode( context, name, type ) {
 	}	
 };
 
-async function putHomeMode( context, name, type, mode ) {
-	// use appId as unique key combined with name for state variable 
-	const appId = context.event.appId;
-
-	// Set the parameters
+async function putHomeMode( name, type, mode ) {
+	// Set the mode for the specified type
 	const params = {
   		TableName: 'smartapp-home-settings',
   		Item: {
@@ -185,7 +179,7 @@ async function putHomeMode( context, name, type, mode ) {
 	
 	try {
     		const data = await dbclient.send(new PutItemCommand(params));
-    		console.log('Data stored in DynamoDB: ',data);
+    		console.log('Data stored in DynamoDB: ', data);
   	} catch (err) {
     		console.error(err);
   	}
