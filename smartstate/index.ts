@@ -185,7 +185,7 @@ async function putHomeMode( homeName, modeType, modeValue ) {
   	}
 };
 
-async function isOccupied( homeName ) {
+async function isHomeOccupied( homeName ) {
 	// initialize return value to true
 	var bOccupied: boolean = true;
 	
@@ -204,4 +204,4 @@ exports.putValue = putValue;
 // exports.nextState = nextState;
 exports.getHomeMode = getHomeMode;
 exports.putHomeMode = putHomeMode;
-exports.isOccupied = isOccupied;
+exports.isHomeOccupied = isHomeOccupied;
