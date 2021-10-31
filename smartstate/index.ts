@@ -158,6 +158,7 @@ async function getHomeMode( homeName, modeType ) {
   	
 	// Return the requested mode type value
 	try {
+		console.log('Home settings query parameters: ', params);
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.modeValue.S;
 	} catch (err) {
