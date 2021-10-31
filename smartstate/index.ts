@@ -158,7 +158,7 @@ async function getHomeMode( homeName, modeType ) {
   	
 	// Return the requested mode type value
 	try {
-		console.log('Home settings query parameters: ', params);
+		// console.log('Home settings query parameters: ', params);
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.modeValue.S;
 	} catch (err) {
@@ -179,7 +179,7 @@ async function putHomeMode( homeName, modeType, modeValue ) {
 	
 	try {
     		const data = await dbclient.send(new PutItemCommand(params));
-    		console.log('Data stored in DynamoDB: ', data);
+    		// console.log('Data stored in DynamoDB: ', data);
   	} catch (err) {
     		console.error(err);
   	}
@@ -190,7 +190,7 @@ async function isHomeActive( homeName ) {
 	var bActive: boolean = true;
 	
 	if (homeName) {
-		const homeOccupiedMode = await getHomeMode( homeName, 'occupied' );
+		const homeOccupiedMode = await getHomeMode( homeName, 'occupancy' );
     	console.log('Home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
 		bActive = ( homeOccupiedMode==='awake');
 	}
