@@ -194,7 +194,7 @@ async function isHomeActive( homeName ) {
     	// console.log('Home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
 		try {
 			bActive = ( homeOccupiedMode==='awake');
-		} finally {}
+		} finally;
 	}
 	return bActive;	
 };
