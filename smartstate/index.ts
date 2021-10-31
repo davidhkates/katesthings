@@ -27,7 +27,7 @@ async function getState( context, name ) {
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.stateValue.S;
 	} catch (err) {
-		console.log("Error", err);
+		console.error(err);
 	}	
 };
 
@@ -74,7 +74,7 @@ async function getValue( table, key ) {
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.keyValue.S;
 	} catch (err) {
-		console.log("Error", err);
+		console.error(err);
 	}	
 };
 
@@ -158,11 +158,10 @@ async function getHomeMode( homeName, modeType ) {
   	
 	// Return the requested mode type value
 	try {
-		// console.log("Calling DynamoDB application context store to get state variable value");
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.modeValue.S;
 	} catch (err) {
-		console.log("Error", err);
+		console.error(err);
 	}	
 };
 
@@ -185,15 +184,16 @@ async function putHomeMode( homeName, modeType, modeValue ) {
   	}
 };
 
-async function isHomeOccupied( homeName ) {
+async function isHomeActive( homeName ) {
 	// initialize return value to true
-	var bOccupied: boolean = true;
+	var bActive: boolean = true;
 	
 	if (homeName) {
 		const homeOccupiedMode = await getHomeMode( homeName, 'occupied' );
-		bOccupied = ( homeOccupiedMode==='awake');
+    	console.log('Home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
+		bActive = ( homeOccupiedMode==='awake');
 	}
-	return bOccupied;	
+	return bActive;	
 };
 
 // Export functions
@@ -204,4 +204,4 @@ exports.putValue = putValue;
 // exports.nextState = nextState;
 exports.getHomeMode = getHomeMode;
 exports.putHomeMode = putHomeMode;
-exports.isHomeOccupied = isHomeOccupied;
+exports.isHomeActive = isHomeActive;
