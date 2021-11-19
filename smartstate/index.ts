@@ -187,7 +187,7 @@ async function putHomeMode( homeName, modeType, modeValue ) {
 
 async function isHomeActive( homeName ) {
 	// initialize return value to true
-	var bActive: boolean;
+	var bActive: boolean = true;
 	
 	if (homeName) {
 		const homeOccupiedMode = await getHomeMode( homeName, 'occupancy' );
