@@ -191,9 +191,9 @@ async function isHomeActive( homeName ) {
 	
 	if (homeName) {
 		const homeOccupiedMode = await getHomeMode( homeName, 'occupancy' );
-    	// console.log('Home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
+    	console.log('isHomeActivie - home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
 		try {
-			bActive = !!( homeOccupiedMode==='active');
+			bActive = (homeOccupiedMode==='active');
 		} finally {
 			bActive = true;
 		}
