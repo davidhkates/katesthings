@@ -191,10 +191,11 @@ async function isHomeActive( homeName ) {
 	
 	if (homeName) {
 		const homeOccupiedMode = await getHomeMode( homeName, 'occupancy' );
-    	console.log('isHomeActivie - home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
+    	// console.log('isHomeActive - home occupied mode: ', homeOccupiedMode, ', home name; ', homeName);
 		try {
 			bActive = (homeOccupiedMode==='active');
-		} finally {
+		} catch(err) {
+			console.log('isHomeActive - invalid dynamoDB response: ', err);
 			bActive = true;
 		}
 	}
