@@ -196,7 +196,7 @@ async function isHomeActive( homeName ) {
 			bActive = (homeOccupiedMode==='active');
 		} catch(err) {
 			console.log('isHomeActive - invalid dynamoDB response: ', err);
-			bActive = true;
+			bActive = true;  // default to true
 		}
 	}
 	return bActive;	
