@@ -38,11 +38,13 @@ async function getContactState( context, contact ) {
 // get the temperature value of specified temperature measurement sensor
 async function getTemperature( context, sensor ) {
 	try {
+		console.log('getTemperature - context: ', context, ', sensor: ', sensor);
 		const sensorDevice = sensor.deviceConfig;
+		console.log('getTemperature - sensor device: ', sensorDevice);
 		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'temperatureMeasurement');
 		return sensorState.temperature.value;
 	} catch (err) {
-		console.log('Error', err);
+		console.log('getTemperature - error retrieving capability status: ', err);
 	}	
 };	
 
