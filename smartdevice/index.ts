@@ -4,7 +4,7 @@
 
 // get the state of specified switch
 async function getSwitchState( context, sensorName ) {
-	let switchState = 'off';  // on, off, mixed
+	let switchState = 'off';  // default switch state to off
 	try {
 		const sensorArray = context.config[sensorName];
 		/*
@@ -12,20 +12,18 @@ async function getSwitchState( context, sensorName ) {
 			const sensorDevice = context.config[sensorName][0];
 			const sensorState = await context.api.devices.getState(sensorDevice.deviceConfig.deviceId);
 			switchState = sensorState.components.main.switch.switch.value;
-		} else {
+		}
 		*/
-			// Get the current states of all the sensors
-			const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId)));
-
-			// Set return value based on value of motion sensor(s)		
-			const states: any = await Promise.all(stateRequests);
-			if (states.find(it => it.components.main.switch.switch.value === 'on')) {
-				switchState = 'on';
-				if (states.find(it => it.motion.value === 'off')) {
-					switchState = 'mixed';
-				}
+		// Get the current states of all the sensors
+		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
+		// Set return value based on value of motion sensor(s)		
+		const stateValues: any = await Promise.all(stateRequests);
+		if (stateValues.find(it => it.components.main.switch.switch.value === 'on')) {
+			switchState = 'on';
+			if (stateValues.find(it => it.components.main.switch.switch.value === 'off')) {
+				switchState = 'mixed';
 			}
-		// }
+		}		
 	} catch (err) {
 		console.log('getSwitchState - error retrieving switch state: ', err);
 	}
