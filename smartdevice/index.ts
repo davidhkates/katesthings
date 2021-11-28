@@ -7,16 +7,8 @@ async function getSwitchState( context, sensorName ) {
 	let switchState = 'off';  // default switch state to off
 	try {
 		const sensorArray = context.config[sensorName];
-		/*
-		if (sensorArray.length==1) {
-			const sensorDevice = context.config[sensorName][0];
-			const sensorState = await context.api.devices.getState(sensorDevice.deviceConfig.deviceId);
-			switchState = sensorState.components.main.switch.switch.value;
-		}
-		*/
-		// Get the current states of all the sensors
 		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
-		// Set return value based on value of motion sensor(s)		
+		// Set return value based on value of switch(es)		
 		const stateValues: any = await Promise.all(stateRequests);
 		if (stateValues.find(it => it.components.main.switch.switch.value === 'on')) {
 			switchState = 'on';
@@ -31,7 +23,7 @@ async function getSwitchState( context, sensorName ) {
 };
 
 // get the state of specified motion sensor
-async function getMotionState( context, motion ) {
+async function getMotionState( context, sensorName ) {
 	try {
 		const motionDevice = motion.deviceConfig;
 		const motionState = await context.api.devices.getCapabilityStatus( motionDevice.deviceId, motionDevice.componentId, 'motionSensor');
@@ -42,7 +34,25 @@ async function getMotionState( context, motion ) {
 };
 
 // get the state of specified contact sensor
-async function getContactState( context, contact ) {
+async function getContactState( context, sensorName ) {
+	let contactState = 'closed';  // default contact state to closed
+	try {
+		const sensorArray = context.config[sensorName];
+		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
+		// Set return value based on value of contact(s)		
+		const stateValues: any = await Promise.all(stateRequests);
+		if (stateValues.find(it => it.components.main.switch.switch.value === 'open')) {
+			contactState = 'open';
+			if (stateValues.find(it => it.components.main.switch.switch.value === 'closed')) {
+				contactState = 'mixed';
+			}
+		}		
+	} catch (err) {
+		console.log('getSwitchState - error retrieving switch state: ', err);
+	}
+	return contactState;
+
+
 	try {
 		const contactDevice = contact.deviceConfig;
 		const contactState = await context.api.devices.getCapabilityStatus( contactDevice.deviceId, contactDevice.componentId, 'contactSensor');
@@ -53,16 +63,19 @@ async function getContactState( context, contact ) {
 };
 
 // get the temperature value of specified temperature measurement sensor
-async function getTemperature( context, sensor ) {
+async function getTemperature( context, sensorName ) {
+	let tempValue;
 	try {
-		console.log('getTemperature - context: ', context, ', sensor: ', sensor);
-		const sensorDevice = sensor.deviceConfig;
-		console.log('getTemperature - sensor device: ', sensorDevice);
-		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'temperatureMeasurement');
-		return sensorState.temperature.value;
+		const sensorArray = context.config[sensorName];
+		if (sensorArray.length==1) {
+			const sensorDevice = context.config[sensorName][0];
+			const sensorState = await context.api.devices.getState(sensorDevice.deviceConfig.deviceId);
+			tempValue = sensorState.components.main.temperature.value;
+		}
 	} catch (err) {
-		console.log('getTemperature - error retrieving capability status: ', err);
-	}	
+		console.log('getTemperature - error retrieving temperature value: ', err);
+	}
+	return tempValue;
 };	
 
 // get the relative humidity value of specified sensor
