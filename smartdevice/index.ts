@@ -4,16 +4,18 @@
 
 // get the state of specified switch
 async function getSwitchState( context, sensorName ) {
+	const switchState;
 	try {
-		const sensorDevice = context.config(sensorName);
-		
-		fanComponent = await context.api.devices.getState(context.config.fanSwitch[0].deviceConfig.deviceId);
-		const sensorDevice = sensor.deviceConfig;
-		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'switch');
-		return sensorState.switch.value;
+		const sensorArray = context.config[sensorName];
+		if (sensorArray.length==1) {
+			const sensorDevice = context.config[sensorName][0];
+			const sensorState = await context.api.devices.getState(sensorDevice.deviceConfig.deviceId);
+			switchState = sensorState.components.main.switch.switch.value;
+		}
 	} catch (err) {
-		console.log('Error', err);
-	}	
+		console.log('getSwitchState - error retrieving switch state: ', err);
+	}
+	return switchState;
 };
 
 // get the state of specified motion sensor
