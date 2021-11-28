@@ -3,8 +3,11 @@
 */
 
 // get the state of specified switch
-async function getSwitchState( context, sensor ) {
+async function getSwitchState( context, sensorName ) {
 	try {
+		const sensorDevice = context.config(sensorName);
+		
+		fanComponent = await context.api.devices.getState(context.config.fanSwitch[0].deviceConfig.deviceId);
 		const sensorDevice = sensor.deviceConfig;
 		const sensorState = await context.api.devices.getCapabilityStatus( sensorDevice.deviceId, sensorDevice.componentId, 'switch');
 		return sensorState.switch.value;
