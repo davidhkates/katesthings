@@ -86,7 +86,7 @@ async function getHumidity( context, sensorName ) {
 		if (sensorArray.length==1) {
 			const sensorDevice = context.config[sensorName][0];
 			const sensorState = await context.api.devices.getState(sensorDevice.deviceConfig.deviceId);
-			tempValue = sensorState.components.main.relativeHumidityMeasurement.humidity.value;
+			humidityValue = sensorState.components.main.relativeHumidityMeasurement.humidity.value;
 		}
 	} catch (err) {
 		console.log('getHumidity - error retrieving humidity value: ', err);
