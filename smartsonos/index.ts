@@ -20,7 +20,7 @@ async function getGroupId(speakerName) {
 		// console.log('getGroupId - groups: ', groups_json);
 		const result = groups_json.find(speaker => speaker.name === speakerName);
 		// console.log('getGroupId - speaker: ', result);
-		return groupId = result.id;
+		return result.id;
 	} catch(err) {
 		console.error('Error retrieving group ID for speaker: ', speakerName);
 	}
