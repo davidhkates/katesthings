@@ -17,6 +17,7 @@ async function getSonosToken() {
 async function getGroupId(speakerName) {
 	try {
 		const groups_json = SmartState.getHomeMode('niwot', 'sonos-groups-json');
+		console.log('getGroupId - groups: ', groups_json);
 		const result = groups_json.find( ({ name }) => name === speakerName );
 		return result.id;
 	} catch(err) {
