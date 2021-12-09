@@ -16,11 +16,11 @@ async function getSonosToken() {
 
 async function getGroupId(speakerName) {
 	try {
-		const groups_json = await SmartState.getHomeMode('niwot', 'sonos-groups-json');
-		console.log('getGroupId - groups: ', groups_json);
+		const groups_json = JSON.parse( await SmartState.getHomeMode('niwot', 'sonos-groups-json') );
+		// console.log('getGroupId - groups: ', groups_json);
 		const result = groups_json.find(speaker => speaker.name === speakerName);
-		console.log('getGroupId - speaker: ', result);
-		return result.id;
+		// console.log('getGroupId - speaker: ', result);
+		return groupId = result.id;
 	} catch(err) {
 		console.error('Error retrieving group ID for speaker: ', speakerName);
 	}
@@ -42,9 +42,9 @@ async function controlSpeaker(speaker, command) {
 			}
 		});
 
-		console.log('controlSpeakers - speaker: ', speaker);
-		// const urlControl = '/groups/' + getGroupId(speaker) + '/playback/' + command;
-		// sonosControl.post(urlControl);
+		// console.log('controlSpeakers - speaker: ', speaker);
+		const urlControl = '/groups/' + getGroupId(speaker) + '/playback/' + command;
+		sonosControl.post(urlControl);
 	} catch (err) {
 		console.error(err);
 	}	
