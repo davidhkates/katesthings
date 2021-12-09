@@ -1,6 +1,6 @@
 # smartsonos
 
-SmartThings connectors to Sonos websocket functions
+Utility functions to control Sonos speakers
 
 # Instructions
 
