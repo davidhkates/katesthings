@@ -10,13 +10,13 @@ const SmartState  = require('@katesthings/smartstate');
 const axios = require("axios");
 
 async function getSonosToken() {
-	const access_token = SmartState.getHomeMode('niwot', 'sonos-access-token');
+	const access_token = await SmartState.getHomeMode('niwot', 'sonos-access-token');
 	return access_token;
 }
 
 async function getGroupId(speakerName) {
 	try {
-		const groups_json = SmartState.getHomeMode('niwot', 'sonos-groups-json');
+		const groups_json = await SmartState.getHomeMode('niwot', 'sonos-groups-json');
 		console.log('getGroupId - groups: ', groups_json);
 		const result = groups_json.find( ({ name }) => name === speakerName );
 		return result.id;
