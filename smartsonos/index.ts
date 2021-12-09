@@ -52,4 +52,4 @@ async function controlSpeaker(speaker, command) {
 
 
 // export external modules
-module.exports.controlSpeakers = controlSpeakers
+module.exports.controlSpeaker = controlSpeaker
