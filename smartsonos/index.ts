@@ -26,7 +26,7 @@ async function getGroupId(speakerName) {
 
 
 // Control playback on Sonos speakers
-async function controlSpeakers(speakers, command) {
+async function controlSpeaker(speaker, command) {
 	  	
 	// Return the requested state variable
 	try {
@@ -40,11 +40,11 @@ async function controlSpeakers(speakers, command) {
 			}
 		});
 
-		for (var speaker of speakers) {
+		// for (var speaker of speakers) {
 			console.log('controlSpeakers - speaker: ', speaker);
 			const urlControl = '/groups/' + getGroupId(speaker) + '/playback/' + command;
 			sonosControl.post(urlControl);
-		}
+		// }
 	} catch (err) {
 		console.error(err);
 	}	
