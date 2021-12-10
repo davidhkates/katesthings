@@ -53,6 +53,7 @@ async function controlSpeakers(context, speakers, command) {
 				const speakerDevices = context.config[speakers];
 				for (const speaker of speakerDevices) {
 					const speakerId = speaker.deviceConfig.deviceId;
+					// const speakerInfo = await context.api.devices.get(speakerId);
 					context.api.devices.get(speakerId).then((speakerInfo) => {
 						const speakerName = speakerInfo.name;
 						// SmartSonos.controlSpeaker(speakerInfo.name, 'pause');
