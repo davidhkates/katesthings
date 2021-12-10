@@ -9,11 +9,6 @@ const SmartState  = require('@katesthings/smartstate');
 // Install relevant node packages
 const axios = require("axios");
 
-async function getSonosToken() {
-	const access_token = await SmartState.getHomeMode('niwot', 'sonos-access-token');
-	return access_token;
-}
-
 async function getGroupId(speakerName) {
 	try {
 		const groups_json = JSON.parse( await SmartState.getHomeMode('niwot', 'sonos-groups-json') );
@@ -28,28 +23,49 @@ async function getGroupId(speakerName) {
 
 
 // Control playback on Sonos speakers
-async function controlSpeaker(speaker, command) {
+async function controlSpeakers(speakerDevices, command) {
 	  	
-	// Return the requested state variable
 	try {
-	
+		// create axios sonos control object
+		const access_token = await SmartState.getHomeMode('niwot', 'sonos-access-token');
 		const sonosControl = axios.create({
 			baseURL: 'https://api.ws.sonos.com/control/api/v1',
-			timeout: 1000,
+			timeout: 5000,
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': 'Bearer ' + getSonosToken()
+				'Authorization': 'Bearer ' + access_token
 			}
 		});
 
-		// console.log('controlSpeakers - speaker: ', speaker);
-		const urlControl = '/groups/' + getGroupId(speaker) + '/playback/' + command;
-		sonosControl.post(urlControl);
-	} catch (err) {
-		console.error(err);
-	}	
+		// get household id
+		sonosControl.get('households').then((result) => {
+			const householdId = result.data.households[0].id;			
+			// putSonosData( 'household-id', idHousehold );
+
+			// get sonos groups and devices
+			sonosControl.get('households/' + householdId + '/groups').then((result) => {
+				const sonosGroups = result.data.groups;
+			
+				// pause all specified speakers
+				// for (const speaker of context.config.roomSpeakers) {
+				for (const speaker of speakerDevices) {
+					const speakerId = speaker.deviceConfig.deviceId;
+					context.api.devices.get(speakerId).then((speakerInfo) => {
+						const speakerName = speakerInfo.name;
+						// SmartSonos.controlSpeaker(speakerInfo.name, 'pause');
+						
+						const result = sonosGroups.find(speaker => speaker.name === speakerName);
+						const groupId = result.id;
+
+						const command = 'pause';
+						const urlControl = '/groups/' + groupId + '/playback/' + command;
+						sonosControl.post(urlControl);
+					})
+				}
+			})
+		})
+	} catch(err) { console.log('roomControl - error controlling Sonos: ', err); }
 };
 
-
 // export external modules
-module.exports.controlSpeaker = controlSpeaker
+module.exports.controlSpeakers = controlSpeakers
