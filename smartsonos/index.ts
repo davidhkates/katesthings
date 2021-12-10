@@ -9,6 +9,7 @@ const SmartState  = require('@katesthings/smartstate');
 // Install relevant node packages
 const axios = require("axios");
 
+/*
 async function getGroupId(speakerName) {
 	try {
 		const groups_json = JSON.parse( await SmartState.getHomeMode('niwot', 'sonos-groups-json') );
@@ -20,10 +21,11 @@ async function getGroupId(speakerName) {
 		console.error('Error retrieving group ID for speaker: ', speakerName);
 	}
 }
+*/
 
 
 // Control playback on Sonos speakers
-async function controlSpeakers(speakerDevices, command) {
+async function controlSpeakers(context, speakers, command) {
 	  	
 	try {
 		// create axios sonos control object
@@ -48,6 +50,7 @@ async function controlSpeakers(speakerDevices, command) {
 			
 				// pause all specified speakers
 				// for (const speaker of context.config.roomSpeakers) {
+				const speakerDevices = context.config[speakers];
 				for (const speaker of speakerDevices) {
 					const speakerId = speaker.deviceConfig.deviceId;
 					context.api.devices.get(speakerId).then((speakerInfo) => {
