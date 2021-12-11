@@ -25,19 +25,19 @@ function inTimeWindow( startDateTime, endDateTime ) {
 	return inTimeWindow;
 }
 
-function inTimeWindow( context, startTime, endTime ) {
+function inTimeContext( context, startTime, endTime ) {
 	
 	// initialize return value
-	var inTimeWindow = true;
+	var inTimeContext = true;
 	
 	const startTime = context.configStringValue('startTime');
 	if (startTime) {
 		const endTime = context.configStringValue('endTime');
 		if (endTime) {
-			inTimeWindow = inTimeWindow(startTime, endTime);
+			inTimeContext = inTimeWindow(new Date(startTime), new Date(endTime));
 		}
 	}
-	return inTimeWindow;
+	return inTimeContext;
 }
 
 function isDayOfWeek( strDayOfWeek ) {
@@ -231,4 +231,5 @@ async function scheduleEndHandler(context) {
 
 // Export date/time functions
 exports.inTimeWindow = inTimeWindow;
+exports.inTimeContext = inTimeContext;
 exports.isDayOfWeek = isDayOfWeek;
