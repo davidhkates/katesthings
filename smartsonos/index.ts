@@ -96,8 +96,8 @@ async function controlSpeakers(context, speakers, command) {
 						sonosControl.post(urlControl);
 					})
 				}
-			})
-		})
+			}).catch((err) => { console.log('controlSpeakers - error getting groups/speakers: ', err); })
+		}).catch((err) => { console.log('controlSpeakers - error getting household(s): ', err); })
 	} catch(err) { console.log('controlSpeakers - error controlling Sonos: ', err); }
 };
 
