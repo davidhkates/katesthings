@@ -23,6 +23,36 @@ async function getGroupId(speakerName) {
 }
 */
 
+// Refresh access token
+async function refreshToken() {
+	try {
+		// create axios sonos control object
+		const refresh_token = await SmartState.getHomeMode('niwot', 'sonos-refresh-token');
+			
+		const urlToken = 'https://api.sonos.com/login/v3/oauth/access';
+
+		const params = new URLSearchParams();
+		params.append('grant_type', 'refresh_token');
+		params.append('refresh_token', refresh_token);
+		// params.append('redirect_uri', 'https%3A%2F%2F00t156cqe1.execute-api.us-west-2.amazonaws.com%2Fdev%2Fauth-callback');
+	
+		const config = {
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+				'Authorization': 'Basic ZDMxM2EyYTAtOTYwZS00ODFmLTlmYzctM2MwMmU0MzY2OTU1OjNhY2ZkZmQ5LTI3YzQtNGE3NC05NzhkLWUyN2ZlZmE0NWJkMg=='
+			}
+		}
+		
+		axios.post(urlToken, params, config).then((result) => {
+			console.log('Success!  Data: ', result.data);
+			
+			// store tokens in DynamoDB home settings file
+			const token_data = result.data;
+			putSonosData( 'access-token', token_data.access_token );
+			putSonosData( 'refresh-token', token_data.refresh_token );
+		}.catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
+	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
+};
 
 // Control playback on Sonos speakers
 async function controlSpeakers(context, speakers, command) {
@@ -68,8 +98,9 @@ async function controlSpeakers(context, speakers, command) {
 				}
 			})
 		})
-	} catch(err) { console.log('roomControl - error controlling Sonos: ', err); }
+	} catch(err) { console.log('controlSpeakers - error controlling Sonos: ', err); }
 };
 
 // export external modules
+module.exports.refreshToken = refreshToken
 module.exports.controlSpeakers = controlSpeakers
