@@ -30,11 +30,11 @@ function inTimeContext( context, startTime, endTime ) {
 	// initialize return value
 	var inTimeContext = true;
 	
-	const startTime = context.configStringValue('startTime');
-	if (startTime) {
-		const endTime = context.configStringValue('endTime');
-		if (endTime) {
-			inTimeContext = inTimeWindow(new Date(startTime), new Date(endTime));
+	const startDateTime = context.configStringValue('startTime');
+	if (startDateTime) {
+		const endDateTime = context.configStringValue('endTime');
+		if (endDateTime) {
+			inTimeContext = inTimeWindow(new Date(startDateTime), new Date(endDateTime));
 		}
 	}
 	return inTimeContext;
