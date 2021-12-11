@@ -25,6 +25,20 @@ function inTimeWindow( startDateTime, endDateTime ) {
 	return inTimeWindow;
 }
 
+function inTimeWindow( context, startTime, endTime ) {
+	
+	// initialize return value
+	var inTimeWindow = true;
+	
+	const startTime = context.configStringValue('startTime');
+	if (startTime) {
+		const endTime = context.configStringValue('endTime');
+		if (endTime) {
+			inTimeWindow = inTimeWindow(startTime, endTime);
+		}
+	}
+	return inTimeWindow;
+}
 
 function isDayOfWeek( strDayOfWeek ) {
 	const today = new Date();
