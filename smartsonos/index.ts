@@ -50,7 +50,7 @@ async function refreshToken() {
 			const token_data = result.data;
 			putSonosData( 'access-token', token_data.access_token );
 			putSonosData( 'refresh-token', token_data.refresh_token );
-		}.catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
+		}).catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
 	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
 };
 
