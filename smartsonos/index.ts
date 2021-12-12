@@ -71,8 +71,8 @@ async function accessToken() {
 	try {
 		// create axios sonos control object
 		refreshToken = await SmartState.getSonosData('refresh-token');
-		const tokenTime = await getSonosData( 'token-time', new Date() );
-		const expiresIn = await getSonosData( 'expires-in' );
+		const tokenTime = await SmartState.getSonosData( 'token-time', new Date() );
+		const expiresIn = await SmartState.getSonosData( 'expires-in' );
 
 		// check to see if token has expired
 		const currentTime = new Date();
