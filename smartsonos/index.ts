@@ -76,7 +76,7 @@ async function accessToken() {
 
 		// check to see if token has expired
 		const currentTime = new Date();
-		if ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
+		if ( ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
 			accessToken = await refreshToken();
 		}
 	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
