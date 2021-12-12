@@ -75,7 +75,7 @@ async function accessToken() {
 		const expiresIn = await SmartState.getSonosData( 'expires-in' );
 
 		// check to see if token has expired
-		const currentTime = new Date();
+		const currentTime: any = new Date();
 		if ( ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
 			accessToken = await refreshToken();
 		}
