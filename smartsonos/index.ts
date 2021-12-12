@@ -23,11 +23,38 @@ async function getGroupId(speakerName) {
 }
 */
 
-// Refresh access token
-async function refreshToken() {
+// Get access token
+async function accessToken() {
+	
+	// declare access token variable to be returned
+	let accessToken;
+	
 	try {
 		// create axios sonos control object
-		const refresh_token = await SmartState.getHomeMode('niwot', 'sonos-refresh-token');
+		refreshToken = await SmartState.getSonosData('refresh-token');
+		const tokenTime = await getSonosData( 'token-time', new Date() );
+		const expiresIn = await getSonosData( 'expires-in' );
+
+		// check to see if token has expired
+		const currentTime = new Date();
+		if ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
+			accessToken = refreshToken();
+		}
+	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
+	
+	return accessToken;
+};
+
+
+// Refresh access token
+async function refreshToken() {
+
+	// declare access token variable to be returned
+	let accessToken;
+	
+	try {
+		// create axios sonos control object
+		const refresh_token = await SmartState.getSonosData('refresh-token');
 			
 		const urlToken = 'https://api.sonos.com/login/v3/oauth/access';
 
@@ -48,10 +75,14 @@ async function refreshToken() {
 			
 			// store tokens in DynamoDB home settings file
 			const token_data = result.data;
-			SmartState.putSonosData( 'access-token', token_data.access_token );
+			accessToken = token_data.access_token;
+			SmartState.putSonosData( 'access-token', accessToken );
 			SmartState.putSonosData( 'refresh-token', token_data.refresh_token );
 		}).catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
 	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
+	
+	// return refreshed access token
+	return accessToken;
 };
 
 // Control playback on Sonos speakers
