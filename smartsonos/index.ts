@@ -34,7 +34,7 @@ async function refreshToken() {
 		}
 		
 		axios.post(urlToken, params, config).then((result) => {
-			console.log('Success!  Data: ', result.data);
+			console.log('refreshToken - Success!  Data: ', result.data);
 			
 			// store tokens in DynamoDB home settings file
 			const token_data = result.data;
@@ -79,7 +79,7 @@ async function accessToken() {
 		if ( ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
 			accessToken = await refreshToken();
 		}
-	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
+	} catch(err) { console.log('accessToken - error getting refresh token from DynamoDB: ', err) }	
 	
 	return accessToken;
 };
@@ -124,7 +124,10 @@ async function controlSpeakers(context, speakers, command) {
 
 						const command = 'pause';
 						const urlControl = '/groups/' + groupId + '/playback/' + command;
-						sonosControl.post(urlControl);
+						// sonosControl.post(urlControl);
+						sonosControl.post(urlControl).then((result) => {
+							console.log('controlSpeakers - Success!  Data: ', result.data);;
+						}).catch((err) => { console.log('controlSpeakers - error controlling speaker: ', err, ', command: ', command); })
 					})
 				}
 			}).catch((err) => { console.log('controlSpeakers - error getting groups/speakers: ', err); })
