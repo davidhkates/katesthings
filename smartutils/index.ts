@@ -41,8 +41,14 @@ function inTimeContext( context, startTime, endTime ) {
 }
 
 function isDayOfWeek( strDayOfWeek ) {
-	const today = new Date();
-	const nDayOfWeek = today.getDay();
+	// determine local day of week
+	const localToday = new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
+	const localDate = new Date(localToday);
+	const nDayOfWeek = localDate.getDay();
+	// const today = new Date();
+	// const nDayOfWeek = today.getDay();
+	
+	// check whether today is specified day of week
 	var bDayOfWeek = false;
 	switch (strDayOfWeek) {
 		case 'everyday':
@@ -56,6 +62,7 @@ function isDayOfWeek( strDayOfWeek ) {
 	}
 	return bDayOfWeek;
 }
+
 
 // global variables
 /*
