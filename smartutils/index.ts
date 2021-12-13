@@ -10,7 +10,7 @@ function inTimeWindow( startDateTime, endDateTime ) {
 		startDateTime.setFullYear( currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() );
 		endDateTime.setFullYear( currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() );
 
-		// check to see if span midnight, if so, adjust basec on current time
+		// check to see if span midnight, if so, adjust based on current time
 		if ( startDateTime > endDateTime ) {
 			if (currentDate > startDateTime) {
 				endDateTime.setDate(endDateTime.getDate()+1);
