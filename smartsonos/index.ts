@@ -40,8 +40,13 @@ async function refreshToken() {
 			// store tokens in DynamoDB home settings file
 			const token_data = result.data;
 			accessToken = token_data.access_token;
-			SmartState.putSonosData( 'access-token', accessToken );
+			
+			SmartState.putSonosData( 'token-time', new Date() );
+			SmartState.putSonosData( 'access-token', token_data.access_token );
 			SmartState.putSonosData( 'refresh-token', token_data.refresh_token );
+			SmartState.putSonosData( 'expires-in', token_data.expires_in );
+			
+			// SmartState.putSonosToken( tokenData );
 		}).catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
 	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
 	
