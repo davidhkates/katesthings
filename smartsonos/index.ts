@@ -33,6 +33,7 @@ async function refreshToken() {
 			}
 		}
 		
+		console.log('refreshToken - refreshing access token');
 		axios.post(urlToken, params, config).then((result) => {
 			console.log('refreshToken - Success!  Data: ', result.data);
 			
@@ -70,12 +71,13 @@ async function accessToken() {
 	
 	try {
 		// create axios sonos control object
-		accessToken = await SmartState.getSonosData('refresh-token');
+		accessToken = await SmartState.getSonosData('access-token');
 		const tokenTime = await SmartState.getSonosData( 'token-time', new Date() );
 		const expiresIn = await SmartState.getSonosData( 'expires-in' );
 
 		// check to see if token has expired
 		const currentTime: any = new Date();
+		console.log('accessToken - token-time: ', tokenTime, ', expires-in: ', expiresIn, ', time gap: ', (currentTime - tokenTime) / 1000 );
 		if ( ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
 			accessToken = await refreshToken();
 		}
