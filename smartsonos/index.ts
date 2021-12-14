@@ -11,12 +11,12 @@ const axios = require("axios");
 
 
 // Store stateful Sonos data in DynamoDB home setting table
-async function getSonosData( dataType ) {
-	return await SmartState.getHomeMode( 'niwot', 'sonos-' + dataType );
+async function getSonosData( key ) {
+	return await SmartState.getHomeMode( 'niwot', 'sonos-' + key );
 };
 
-async function putSonosData( dataType, dataValue ) {
-	await SmartState.putHomeMode( 'niwot', 'sonos-' + dataType, dataValue );
+async function putSonosData( key, value ) {
+	await SmartState.putHomeMode( 'niwot', 'sonos-' + key, value );
 };
 
 // Refresh access token
