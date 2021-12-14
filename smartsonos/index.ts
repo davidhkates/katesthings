@@ -10,6 +10,15 @@ const SmartState  = require('@katesthings/smartstate');
 const axios = require("axios");
 
 
+// Store stateful Sonos data in DynamoDB home setting table
+async function getSonosData( dataType ) {
+	return await SmartState.getHomeMode( 'niwot', 'sonos-' + dataType );
+};
+
+async function putSonosData( dataType, dataValue ) {
+	await SmartState.putHomeMode( 'niwot', 'sonos-' + dataType, dataValue );
+};
+
 // Refresh access token
 async function refreshToken() {
 
@@ -42,12 +51,12 @@ async function refreshToken() {
 			const token_data = result.data;
 			accessToken = token_data.access_token;
 			
-			SmartState.putSonosData( 'token-time', new Date() );
-			SmartState.putSonosData( 'access-token', token_data.access_token );
-			SmartState.putSonosData( 'refresh-token', token_data.refresh_token );
-			SmartState.putSonosData( 'expires-in', token_data.expires_in );
+			putSonosData( 'token-time', new Date() );
+			putSonosData( 'access-token', token_data.access_token );
+			putSonosData( 'refresh-token', token_data.refresh_token );
+			putSonosData( 'expires-in', token_data.expires_in );
 			
-			// SmartState.putSonosToken( tokenData );
+			// putSonosToken( tokenData );
 		}).catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
 	} catch(err) { console.log('refreshToken - error getting refresh token from DynamoDB: ', err) }	
 	
@@ -77,9 +86,9 @@ async function accessToken() {
 	
 	try {
 		// create axios sonos control object
-		accessToken = await SmartState.getSonosData('access-token');
-		const tokenTime = await SmartState.getSonosData( 'token-time', new Date() );
-		const expiresIn = await SmartState.getSonosData( 'expires-in' );
+		accessToken = await getSonosData('access-token');
+		const tokenTime = await getSonosData( 'token-time', new Date() );
+		const expiresIn = await getSonosData( 'expires-in' );
 
 		// check to see if token has expired
 		const currentTime: any = new Date();
