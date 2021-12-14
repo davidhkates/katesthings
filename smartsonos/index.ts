@@ -9,6 +9,7 @@ const SmartState  = require('@katesthings/smartstate');
 // Install relevant node packages
 const axios = require("axios");
 
+
 // Refresh access token
 async function refreshToken() {
 
