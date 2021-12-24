@@ -150,5 +150,5 @@ async function controlSpeakers(context, speakers, command) {
 
 
 // export external modules
-module.exports.accessToken = accessToken
+// module.exports.getAccessToken = getAccessToken
 module.exports.controlSpeakers = controlSpeakers
