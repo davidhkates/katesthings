@@ -27,14 +27,16 @@ async function refreshToken() {
 	
 	try {
 		// create axios sonos control object
-		const refresh_token = await SmartState.getSonosData('refresh-token');
+		const refreshToken = await getSonosData('refresh-token');
+		console.log('refreshToken - retrieved refresh token: ', refreshToken);
 			
 		const urlToken = 'https://api.sonos.com/login/v3/oauth/access';
 
 		const params = new URLSearchParams();
 		params.append('grant_type', 'refresh_token');
-		params.append('refresh_token', refresh_token);
+		params.append('refresh_token', refreshToken);
 		// params.append('redirect_uri', 'https%3A%2F%2F00t156cqe1.execute-api.us-west-2.amazonaws.com%2Fdev%2Fauth-callback');
+		console.log('refreshToken - initialized parameters: ', params);
 	
 		const config = {
 			headers: {
@@ -54,7 +56,7 @@ async function refreshToken() {
 			putSonosData( 'token-time', new Date() );
 			putSonosData( 'access-token', token_data.access_token );
 			putSonosData( 'refresh-token', token_data.refresh_token );
-			putSonosData( 'expires-in', token_data.expires_in );
+			putSonosData( 'expires-in', token_data.expires_in.toString() );
 			
 			// putSonosToken( tokenData );
 		}).catch((err) => { console.log('refreshToken - error refreshing token: ', err); })
@@ -64,39 +66,28 @@ async function refreshToken() {
 	return accessToken;
 };
 
-/*
-async function getGroupId(speakerName) {
-	try {
-		const groups_json = JSON.parse( await SmartState.getHomeMode('niwot', 'sonos-groups-json') );
-		// console.log('getGroupId - groups: ', groups_json);
-		const result = groups_json.find(speaker => speaker.name === speakerName);
-		// console.log('getGroupId - speaker: ', result);
-		return result.id;
-	} catch(err) {
-		console.error('Error retrieving group ID for speaker: ', speakerName);
-	}
-}
-*/
-
 // Get access token
-async function accessToken() {
+async function getAccessToken() {
 	
 	// declare access token variable to be returned
 	let accessToken;
-	
+
 	try {
 		// create axios sonos control object
+		console.log('getAccessToken - getting Sonos data from DyanmoDB');
 		accessToken = await getSonosData('access-token');
-		const tokenTime = await getSonosData( 'token-time' );
+		const tokenTime = new Date( await getSonosData( 'token-time' ) );
 		const expiresIn = await getSonosData( 'expires-in' );
 
 		// check to see if token has expired
 		const currentTime: any = new Date();
-		console.log('accessToken - token-time: ', tokenTime, ', expires-in: ', expiresIn, ', time gap: ', (currentTime - tokenTime) / 1000 );
-		if ( ( ( currentTime - tokenTime ) / 1000 ) > expiresIn ) {
+		const elapsedTime = (currentTime.getTime() - tokenTime.getTime()) / 1000;
+		console.log('getAccessToken - token-time: ', tokenTime, ', expires-in: ', expiresIn, ', time gap: ', elapsedTime );
+		if ( elapsedTime > expiresIn ) {
+			console.log('getAccessToken - token expired, need to refresh: ', elapsedTime);
 			accessToken = await refreshToken();
 		}
-	} catch(err) { console.log('accessToken - error getting refresh token from DynamoDB: ', err) }	
+	} catch(err) { console.log('getAccessToken - error getting refresh token from DynamoDB: ', err) }	
 	
 	return accessToken;
 };
@@ -107,7 +98,8 @@ async function controlSpeakers(context, speakers, command) {
 	  	
 	try {
 		// create axios sonos control object
-		const access_token = await SmartState.getHomeMode('niwot', 'sonos-access-token');
+		// const access_token = await SmartState.getHomeMode('niwot', 'sonos-access-token');
+		const access_token = await getAccessToken();
 		const sonosControl = axios.create({
 			baseURL: 'https://api.ws.sonos.com/control/api/v1',
 			timeout: 5000,
@@ -118,13 +110,16 @@ async function controlSpeakers(context, speakers, command) {
 		});
 
 		// get household id
+		console.log('controlSpeakers - getting households');
 		sonosControl.get('households').then((result) => {
 			const householdId = result.data.households[0].id;			
+			console.log('controlSpeakers - household ID: ', householdId);
 			// putSonosData( 'household-id', idHousehold );
 
 			// get sonos groups and devices
 			sonosControl.get('households/' + householdId + '/groups').then((result) => {
 				const sonosGroups = result.data.groups;
+				console.log('controlSpeakers - Sonos groups: ', sonosGroups);
 			
 				// pause all specified speakers
 				// for (const speaker of context.config.roomSpeakers) {
@@ -133,10 +128,11 @@ async function controlSpeakers(context, speakers, command) {
 					const speakerId = speaker.deviceConfig.deviceId;
 					// const speakerInfo = await context.api.devices.get(speakerId);
 					context.api.devices.get(speakerId).then((speakerInfo) => {
-						const speakerName = speakerInfo.name;
-						// SmartSonos.controlSpeaker(speakerInfo.name, 'pause');
+						const speakerName = speakerInfo.name;						// SmartSonos.controlSpeaker(speakerInfo.name, 'pause');
 						
+						console.log('controlSpeakers - find speaker: ', speakerName, ', speakerId: ', speakerId);
 						const result = sonosGroups.find(speaker => speaker.name === speakerName);
+						console.log('controlSpeakers - result of find: ', result);
 						const groupId = result.id;
 
 						const command = 'pause';
@@ -151,6 +147,7 @@ async function controlSpeakers(context, speakers, command) {
 		}).catch((err) => { console.log('controlSpeakers - error getting household(s): ', err); })
 	} catch(err) { console.log('controlSpeakers - error controlling Sonos: ', err); }
 };
+
 
 // export external modules
 module.exports.accessToken = accessToken
