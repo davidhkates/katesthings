@@ -22,6 +22,15 @@ async function getSwitchState( context, sensorName ) {
 	return switchState;
 };
 
+// set the state of specified switch
+async function setSwitchState( context, deviceName, deviceState ) {
+	try {
+		await context.api.devices.sendCommands(context.config[deviceName], 'switch', deviceState);
+	} catch (err) {
+		console.log('setSwitchState - error setting switch state: ', err);
+	}
+};
+
 // get the state of specified motion sensor
 async function getMotionState( context, sensorName ) {
 	let motionState = 'inactive';  // default motion state to inactive
@@ -96,10 +105,17 @@ async function getHumidity( context, sensorName ) {
 	return humidityValue;
 };	
 
+// returns boolean indication wither device has been defined
+function isDeviceDefined( context, deviceName ) {
+	return !!context.config[deviceName];
+}
+
 
 // Export function
 exports.getSwitchState  = getSwitchState;
+exports.setSwitchState  = setSwitchState;
 exports.getMotionState  = getMotionState;
 exports.getContactState = getContactState;
 exports.getTemperature  = getTemperature;
 exports.getHumidity     = getHumidity;
+exports.isDeviceDefined = isDeviceDefined;
