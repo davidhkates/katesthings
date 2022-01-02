@@ -3,17 +3,20 @@
 */
 
 // get the state of specified switch
-async function getSwitchState( context, sensorName ) {
-	let switchState = 'off';  // default switch state to off
+async function getSwitchState( context, switchName ) {
+	// let switchState = 'off';  // default switch state to off
+	let switchState = 'on';  // default switch state to on	
 	try {
-		const sensorArray = context.config[sensorName];
-		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
-		// Set return value based on value of switch(es)		
-		const stateValues: any = await Promise.all(stateRequests);
-		if (stateValues.find(it => it.components.main.switch.switch.value === 'on')) {
-			switchState = 'on';
-			if (stateValues.find(it => it.components.main.switch.switch.value === 'off')) {
-				switchState = 'mixed';
+		const switchArray = context.config[switchName];
+		if (switchArray) {
+			const stateRequests = switchArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
+			// Set return value based on value of switch(es)		
+			const stateValues: any = await Promise.all(stateRequests);
+			if (stateValues.find(it => it.components.main.switch.switch.value === 'on')) {
+				switchState = 'on';
+				if (stateValues.find(it => it.components.main.switch.switch.value === 'off')) {
+					switchState = 'mixed';
+				}
 			}
 		}		
 	} catch (err) {
@@ -36,13 +39,15 @@ async function getMotionState( context, sensorName ) {
 	let motionState = 'inactive';  // default motion state to inactive
 	try {
 		const sensorArray = context.config[sensorName];
-		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
-		// Set return value based on value of motion sensor(s)		
-		const stateValues: any = await Promise.all(stateRequests);
-		if (stateValues.find(it => it.components.main.motionSensor.motion.value === 'active')) {
-			motionState = 'active';
-			if (stateValues.find(it => it.components.main.motionSensor.motion.value === 'inactive')) {
-				motionState = 'mixed';
+		if (sensorArray) {
+			const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
+			// Set return value based on value of motion sensor(s)		
+			const stateValues: any = await Promise.all(stateRequests);
+			if (stateValues.find(it => it.components.main.motionSensor.motion.value === 'active')) {
+				motionState = 'active';
+				if (stateValues.find(it => it.components.main.motionSensor.motion.value === 'inactive')) {
+					motionState = 'mixed';
+				}
 			}
 		}		
 	} catch (err) {
@@ -56,13 +61,15 @@ async function getContactState( context, sensorName ) {
 	let contactState = 'closed';  // default contact state to closed
 	try {
 		const sensorArray = context.config[sensorName];
-		const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
-		// Set return value based on value of contact(s)		
-		const stateValues: any = await Promise.all(stateRequests);
-		if (stateValues.find(it => it.components.main.contactSensor.contact.value === 'open')) {
-			contactState = 'open';
-			if (stateValues.find(it => it.components.main.contactSensor.contact.value === 'closed')) {
-				contactState = 'mixed';
+		if (sensorArray) {
+			const stateRequests = sensorArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
+			// Set return value based on value of contact(s)		
+			const stateValues: any = await Promise.all(stateRequests);
+			if (stateValues.find(it => it.components.main.contactSensor.contact.value === 'open')) {
+				contactState = 'open';
+				if (stateValues.find(it => it.components.main.contactSensor.contact.value === 'closed')) {
+					contactState = 'mixed';
+				}
 			}
 		}		
 	} catch (err) {
