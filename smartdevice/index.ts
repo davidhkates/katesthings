@@ -4,11 +4,11 @@
 
 // get the state of specified switch
 async function getSwitchState( context, switchName ) {
-	// let switchState = 'off';  // default switch state to off
 	let switchState = 'on';  // default switch state to on	
 	try {
 		const switchArray = context.config[switchName];
 		if (switchArray) {
+			switchState = 'off';	// default switch state to off if switches defined
 			const stateRequests = switchArray.map(it => context.api.devices.getState(it.deviceConfig.deviceId));
 			// Set return value based on value of switch(es)		
 			const stateValues: any = await Promise.all(stateRequests);
