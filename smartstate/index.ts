@@ -27,7 +27,7 @@ async function getState( context, name ) {
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.stateValue.S;
 	} catch (err) {
-		console.error(err);
+		console.error('getState - error: ', err);
 	}	
 };
 
@@ -50,9 +50,9 @@ async function putState( context, name, value ) {
 	
 	try {
     		const data = await dbclient.send(new PutItemCommand(params));
-    		console.log('Data stored in DynamoDB: ',data);
+    		// console.log('Data stored in DynamoDB: ',data);
   	} catch (err) {
-    		console.error(err);
+    		console.error('putState - error: ', err);
   	}
 };
 
@@ -74,7 +74,7 @@ async function getValue( table, key ) {
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.keyValue.S;
 	} catch (err) {
-		console.error(err);
+		console.error('getValue - error: ', err);
 	}	
 };
 
@@ -95,7 +95,7 @@ async function putValue( table, key, value ) {
     		const data = await dbclient.send(new PutItemCommand(params));
     		console.log('Data stored in DynamoDB: ',data);
   	} catch (err) {
-    		console.error(err);
+		console.error('putValue - error: ', err);
   	}
 };
 
@@ -162,7 +162,7 @@ async function getHomeMode( homeName, modeType ) {
 		const data = await dbclient.send(new GetItemCommand(params));
 		return data.Item.modeValue.S;
 	} catch (err) {
-		console.error(err);
+		console.error('getHomeMode - error: ', err);
 	}	
 };
 
@@ -181,7 +181,7 @@ async function putHomeMode( homeName, modeType, modeValue ) {
     		const data = await dbclient.send(new PutItemCommand(params));
     		// console.log('Data stored in DynamoDB: ', data);
   	} catch (err) {
-    		console.error(err);
+		console.error('putHomeMode - error: ', err);
   	}
 };
 
