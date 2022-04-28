@@ -8,8 +8,9 @@ const homeSettings = 'smartapp-home-settings';
   Get the value of the specified state variable stored in DynamoDB, returned as string
   */
 async function getState( context, name ) {
-	// use appId as unique key combined with name for state variable 
-	const appId = context.event.appId;
+	// use installedAppId as unique key combined with name for state variable 
+	// const appId = context.event.appId;
+	const appId = context.installedAppId;
 	
 	// Set the parameters
 	const params = {
@@ -35,8 +36,9 @@ async function getState( context, name ) {
   Store the value of the specified state variable stored in DynamoDB as string
   */
 async function putState( context, name, value ) {
-	// use appId as unique key combined with name for state variable 
-	const appId = context.event.appId;
+	// use installedAppId as unique key combined with name for state variable 
+	// const appId = context.event.appId;
+	const appId = context.installedAppId;
 
 	// Set the parameters
 	const params = {
